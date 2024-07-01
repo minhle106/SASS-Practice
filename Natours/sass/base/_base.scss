@@ -1,0 +1,69 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+
+  @include respond(tab-land) {
+    font-size: 56.25%;
+  }
+
+  @include respond(tab-port) {
+    font-size: 50%;
+  }
+
+  @include respond(big-desktop) {
+    font-size: 75%;
+  }
+}
+
+body {
+  box-sizing: border-box;
+  padding: 3rem;
+
+  @include respond(tab-land) {
+    padding: 0;
+  }
+}
+
+$bg-light: #c0c2b7;
+$color-light: #000;
+$bg-dark: #3a3939;
+$color-dark: white;
+
+$themes: (
+  default: (bg: $bg-light, text: $color-light),
+  dark: (bg: $bg-dark, text: $color-dark),
+);
+
+@mixin createTheme() {
+  @each $theme, $theme-style in $themes {
+    .theme--#{$theme} & {
+      $theme-map: (
+        ) !global;
+
+      @each $key, $value in $theme-style {
+        $theme-map: map-merge($theme-map, ($key: $value)) !global;
+      }
+
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function getTheme($key) {
+  @return map-get($theme-map, $key
+);
+}
+
+
+.base {
+  @include createTheme() {
+    background: getTheme('bg');
+    color: getTheme('text')
+  }
+}
